@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SundayGrids - Select Solar Capacity</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a1628;
+            min-height: 100vh;
+            color: white;
+            padding-bottom: 120px;
+        }
+        
+        .top-green-bar {
+            background: #10b981;
+            height: 6px;
+            width: 100%;
+        }
+        
+        .header {
+            background: white;
+            padding: 16px 0;
+            border-bottom: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            position: relative;
+        }
+        
+        .logo::before {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: white;
+            clip-path: polygon(0% 0%, 100% 50%, 0% 100%);
+            transform: rotate(90deg);
+        }
+        
+        .logo::after {
+            content: "";
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            top: 4px;
+            right: 4px;
+        }
+        
+        .brand-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        
+        .page-title {
+            font-size: 18px;
+            font-weight: 500;
+            color: #64748b;
+        }
+        
+        .logout-btn {
+            background: transparent;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #475569;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        .left-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .kepler-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+        
+        .kepler-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #84cc16, #65a30d);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+            font-weight: 800;
+            font-size: 16px;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+        
+        .kepler-info h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            margin-bottom: 6px;
+        }
+        
+        .kepler-capacity {
+            background: #1e293b;
+            color: #94a3b8;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .discount-text {
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 32px;
+            color: white;
+        }
+        
+        .discount-amount {
+            color: #10b981;
+        }
+        
+        .input-section {
+            margin-bottom: 32px;
+        }
+        
+        .input-label {
+            color: #94a3b8;
+            font-size: 14px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .currency-symbol {
+            position: absolute;
+            left:16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .power-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 14px 16px 14px 36px;
+            font-size: 16px;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .power-input:focus {
+            outline: none;
+            border-color: #10b981;
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .power-input::placeholder {
+            color: #64748b;
+        }
+        
+        .range-section {
+            margin-bottom: 16px;
+        }
+        
+        .range-label {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .range-container {
+            position: relative;
+            margin-bottom: 12px;
+        }
+        
+        .range-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #334155;
+            border-radius: 3px;
+            outline: none;
+            position: relative;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: #10b981;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .range-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: #10b981;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .range-value {
+            color: #10b981;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .monthly-savings-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        
+        .icon-calendar {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+        }
+        
+        .icon-solar {
+            background: linear-gradient(135deg, #06b6d4, #0891b2);
+            color: white;
+        }
+        
+        .icon-energy {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .icon-rupee {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .icon-recycle {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+        
+        .card-label {
+            color: #94a3b8;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.2;
+        }
+        
+        .card-value {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .final-payable {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid rgba(16, 185, 129, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .final-payable-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .final-payable-label {
+            color: #10b981;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        
+        .final-payable-subtitle {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+        
+        .final-payable-amount {
+            color: #10b981;
+            font-size: 32px;
+            font-weight: 800;
+        }
+        
+        .bottom-floating-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 16px 20px;
+            z-index: 1000;
+        }
+        
+        .bottom-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .help-bubble {
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 50px;
+            padding: 12px 20px;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .help-link {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .help-link:hover {
+            color: #059669;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-back {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #64748b;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .btn-review {
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            border: none;
+            color: white;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-review:hover {
+            background: linear-gradient(135deg, #9333ea, #7c3aed);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .bottom-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                flex-direction: column;
+            }
+            
+            .btn-back,
+            .btn-review {
+                width: 100%;
+            }
+            
+            .header-content {
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+            
+            .page-title {
+                order: 3;
+                width: 100%;
+                text-align: center;
+                font-size: 16px;
+            }
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-green-bar"></div>
+    
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo"></div>
+                <span class="brand-name">SundayGrids</span>
+            </div>
+            <h1 class="page-title">Select Solar Capacity</h1>
+            <button class="logout-btn">
+                <span>Logout & Exit</span>
+                <i class="fas fa-external-link-alt"></i>
+            </button>
+        </div>
+    </header>
+    
+    <main class="main-container">
+        <section class="left-section">
+            <div class="kepler-header">
+                <div class="kepler-icon">K100</div>
+                <div class="kepler-info">
+                    <h2>Kepler 100</h2>
+                    <span class="kepler-capacity">44.88 kW left</span>
+                </div>
+            </div>
+            
+            <p class="discount-text">
+                Every unit of electricity from this project generates <span class="discount-amount">₹6.42 discount</span> on your power bill
+            </p>
+            
+            <div class="input-section">
+                <label class="input-label">Enter avg power bill</label>
+                <div class="input-wrapper">
+                    <span class="currency-symbol">₹</span>
+                    <input type="number" class="power-input" value="1000" id="powerBill" placeholder="Enter your monthly bill">
+                </div>
+            </div>
+            
+            <div class="range-section">
+                <label class="range-label">Choose savings range (%)</label>
+                <div class="range-container">
+                    <input type="range" class="range-slider" min="0" max="100" value="0" id="savingsRange">
+                </div>
+                <div class="range-value" id="rangeValue">0%</div>
+            </div>
+        </section>
+        
+        <section class="right-section">
+            <div class="monthly-savings-card">
+                <div class="card-header">
+                    <div class="card-icon icon-calendar">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="card-label">Your monthly<br>savings</div>
+                </div>
+                <div class="card-value" id="monthlySavings">₹0.00</div>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-icon icon-solar">
+                            <i class="fas fa-solar-panel"></i>
+                        </div>
+                        <div class="card-label">Reserved<br>Solar</div>
+                    </div>
+                    <div class="card-value" id="reservedSolar">0 W</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-icon icon-energy">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div class="card-label">Energy<br>Produced /Mo</div>
+                    </div>
+                    <div class="card-value" id="energyProduced">0.00 kWh</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-icon icon-rupee">
+                            <i class="fas fa-rupee-sign"></i>
+                        </div>
+                        <div class="card-label">Annual<br>Savings</div>
+                    </div>
+                    <div class="card-value" id="annualSavings">₹0.00</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="card-header">
+                        <div class="card-icon icon-recycle">
+                            <i class="fas fa-recycle"></i>
+                        </div>
+                        <div class="card-label">10 Years<br>Savings</div>
+                    </div>
+                    <div class="card-value" id="tenYearSavings">₹0.00</div>
+                </div>
+            </div>
+            
+            <div class="final-payable">
+                <div class="final-payable-content">
+                    <div>
+                        <div class="final-payable-label">Final Payable</div>
+                        <div class="final-payable-subtitle">Inclusive of GST</div>
+                    </div>
+                    <div class="final-payable-amount" id="finalPayable">₹0.00</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <div class="bottom-floating-bar">
+        <div class="bottom-content">
+            <div class="help-bubble">
+                Have more questions? <a href="#" class="help-link">Talk to our team</a>
+            </div>
+            <div class="action-buttons">
+                <button class="btn-back">Back</button>
+                <button class="btn-review">Review</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const powerBillInput = document.getElementById('powerBill');
+        const savingsRange = document.getElementById('savingsRange');
+        const rangeValue = document.getElementById('rangeValue');
+        const monthlySavings = document.getElementById('monthlySavings');
+        const reservedSolar = document.getElementById('reservedSolar');
+        const energyProduced = document.getElementById('energyProduced');
+        const annualSavings = document.getElementById('annualSavings');
+        const tenYearSavings = document.getElementById('tenYearSavings');
+        const finalPayable = document.getElementById('finalPayable');
+        
+        // Solar calculation constants
+        const DISCOUNT_PER_UNIT = 6.42; // ₹6.42 per kWh
+        const SOLAR_COST_PER_WATT = 50; // ₹50 per watt installed capacity
+        const MONTHLY_GENERATION_FACTOR = 120; // kWh per kW per month (typical for India)
+        const GST_RATE = 0.18; // 18% GST
+        
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency',
+                currency: 'INR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+        
+        function formatNumber(number, decimals = 2) {
+            return new Intl.NumberFormat('en-IN', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            }).format(number);
+        }
+        
+        function updateCalculations() {
+            const powerBill = parseFloat(powerBillInput.value) || 0;
+            const savingsPercent = parseFloat(savingsRange.value) || 0;
+            
+            // Update range display
+            rangeValue.textContent = savingsPercent + '%';
+            
+            // Calculate monthly savings target
+            const targetMonthlySavings = (powerBill * savingsPercent) / 100;
+            
+            // Calculate required solar capacity
+            // Monthly savings = Monthly generation × Discount per unit
+            // Monthly generation = Solar capacity (kW) × Monthly generation factor
+            const requiredMonthlyGeneration = targetMonthlySavings / DISCOUNT_PER_UNIT;
+            const requiredSolarCapacityKW = requiredMonthlyGeneration / MONTHLY_GENERATION_FACTOR;
+            const requiredSolarCapacityW = requiredSolarCapacityKW * 1000;
+            
+            // Calculate actual monthly generation and savings
+            const actualMonthlyGeneration = requiredSolarCapacityKW * MONTHLY_GENERATION_FACTOR;
+            const actualMonthlySavings = actualMonthlyGeneration * DISCOUNT_PER_UNIT;
+            
+            // Calculate costs
+            const baseCost = requiredSolarCapacityW * SOLAR_COST_PER_WATT;
+            const gstAmount = baseCost * GST_RATE;
+            const finalCost = baseCost + gstAmount;
+            
+            // Calculate long-term savings
+            const annualSavingsAmount = actualMonthlySavings * 12;
+            const tenYearSavingsAmount = annualSavingsAmount * 10;
+            
+            // Update UI
+            monthlySavings.textContent = formatCurrency(actualMonthlySavings);
+            reservedSolar.textContent = requiredSolarCapacityW >= 1000 ? 
+                `${formatNumber(requiredSolarCapacityKW, 1)} kW` : 
+                `${Math.round(requiredSolarCapacityW)} W`;
+            energyProduced.textContent = `${formatNumber(actualMonthlyGeneration)} kWh`;
+            annualSavings.textContent = formatCurrency(annualSavingsAmount);
+            tenYearSavings.textContent = formatCurrency(tenYearSavingsAmount);
+            finalPayable.textContent = formatCurrency(finalCost);
+            
+            // Update slider background
+            const percentage = savingsPercent;
+            savingsRange.style.background = `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #334155 ${percentage}%, #334155 100%)`;
+            
+            // Validate against available capacity
+            const availableCapacityKW = 44.88;
+            if (requiredSolarCapacityKW > availableCapacityKW) {
+                // Show warning or limit the capacity
+                console.warn(`Requested capacity (${requiredSolarCapacityKW.toFixed(2)} kW) exceeds available capacity (${availableCapacityKW} kW)`);
+            }
+        }
+        
+        // Event listeners
+        powerBillInput.addEventListener('input', updateCalculations);
+        savingsRange.addEventListener('input', updateCalculations);
+        
+        // Initialize calculations
+        updateCalculations();
+        
+        // Store values when clicking Review button
+        document.querySelector('.btn-review').addEventListener('click', function() {
+            // Store calculations in localStorage
+            const calculationData = {
+                capacityReserved: reservedSolar.textContent,
+                monthlyCredits: monthlySavings.textContent,
+                tenYearSavings: tenYearSavings.textContent,
+                reservationCost: finalPayable.textContent,
+                gstAmount: (parseFloat(finalPayable.textContent.replace('₹', '').replace(/,/g, '')) * 0.18).toFixed(2),
+                finalPayableAmount: (parseFloat(finalPayable.textContent.replace('₹', '').replace(/,/g, '')) * 1.18).toFixed(2)
+            };
+            localStorage.setItem('solarCalculations', JSON.stringify(calculationData));
+            window.location.href = 'review.html';
+        });
+        
+        // Add some smooth scrolling and interaction effects
+        document.querySelectorAll('.stat-card, .monthly-savings-card, .final-payable').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+                this.style.transition = 'transform 0.2s ease';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Button interactions
+        document.querySelector('.btn-back').addEventListener('click', function() {
+            console.log('Back button clicked');
+            // Add your back navigation logic here
+        });
+        
+        document.querySelector('.btn-review').addEventListener('click', function() {
+            console.log('Review button clicked');
+
+            // Capture calculated values
+            const calculatedData = {
+                monthlySavings: monthlySavings.textContent,
+                reservedSolar: reservedSolar.textContent,
+                energyProduced: energyProduced.textContent,
+                annualSavings: annualSavings.textContent,
+                tenYearSavings: tenYearSavings.textContent,
+                finalPayable: finalPayable.textContent,
+                // Assuming GST and Reservation Cost are needed, we need to calculate them here or pass them from updateCalculations
+                // For now, let's pass the raw numbers and format them in review.html if needed
+                rawFinalPayable: parseFloat(finalPayable.textContent.replace(/[^0-9.-]+/g,'').replace(',','.')),
+                rawReservedSolarW: parseFloat(reservedSolar.textContent.replace(/[^0-9.-]+/g,'').replace(',','.')),
+                rawMonthlySavings: parseFloat(monthlySavings.textContent.replace(/[^0-9.-]+/g,'').replace(',','.')),
+                rawTenYearSavings: parseFloat(tenYearSavings.textContent.replace(/[^0-9.-]+/g,'').replace(',','.')),
+            };
+
+            // Store in localStorage
+            localStorage.setItem('solarCalculationData', JSON.stringify(calculatedData));
+
+            // Redirect to review.html
+            window.location.href = 'review.html';
+        });
+        
+        document.querySelector('.help-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Help link clicked');
+            // Add your help/support logic here
+        });
+        
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            console.log('Logout button clicked');
+            // Add your logout logic here
+        });
+    </script>
+</body>
+</html>

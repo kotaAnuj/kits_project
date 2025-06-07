@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review your Reservation - SundayGrids</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f8fafb;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .logo::before {
+            content: "🌞";
+            margin-right: 8px;
+            font-size: 28px;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .logout-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logout-btn:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+        .logout-btn::after {
+            content: "↗";
+            font-size: 16px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: linear-gradient(90deg, #48bb78 0%, #48bb78 75%, #e2e8f0 75%, #e2e8f0 100%);
+        }
+
+        .review-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        .terms-section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 24px;
+        }
+
+        .terms-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .terms-card {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .terms-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .terms-icon {
+            width: 48px;
+            height: 48px;
+            background: #edf2f7;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+
+        .terms-card:nth-child(1) .terms-icon { background: #e6fffa; }
+        .terms-card:nth-child(1) .terms-icon::before { content: "👤"; }
+
+        .terms-card:nth-child(2) .terms-icon { background: #fef5e7; }
+        .terms-card:nth-child(2) .terms-icon::before { content: "💳"; }
+
+        .terms-card:nth-child(3) .terms-icon { background: #f0fff4; }
+        .terms-card:nth-child(3) .terms-icon::before { content: "🛡️"; }
+
+        .terms-card:nth-child(4) .terms-icon { background: #fef2f2; }
+        .terms-card:nth-child(4) .terms-icon::before { content: "↩️"; }
+
+        .terms-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .terms-card p {
+            font-size: 14px;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .order-summary h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 24px;
+        }
+
+        .summary-card {
+            background: linear-gradient(135deg, #2d5a5a 0%, #1a4040 100%);
+            border-radius: 16px;
+            padding: 32px;
+            color: white;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-card::after {
+            content: "";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 120px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .project-info h3 {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .project-info h2 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .summary-item .label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .summary-item .value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .summary-details {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .detail-item {
+            flex: 1;
+        }
+
+        .detail-item .label {
+            font-size: 12px;
+            opacity: 0.8;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .detail-item .value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .validity h4 {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .validity .date {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .cost-breakdown {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .cost-item:last-child {
+            border-bottom: none;
+        }
+
+        .cost-item span:first-child {
+            font-size: 14px;
+            color: #4a5568;
+        }
+
+        .cost-item span:last-child {
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .cost-item small {
+            display: block;
+            font-size: 12px;
+            color: #a0aec0;
+            margin-top: 2px;
+        }
+
+        .cost-item.total {
+            background: #f7fafc;
+            margin: 16px -24px -24px;
+            padding: 20px 24px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .cost-item.total span:first-child {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .cost-item.total span:last-child {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .footer {
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .talk-team {
+            background: #f0fff4;
+            color: #38a169;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .talk-team:hover {
+            background: #e6fffa;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+        }
+
+        .back-btn, .checkout-btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .back-btn {
+            background: white;
+            color: #4a5568;
+            border: 2px solid #e2e8f0;
+        }
+
+        .back-btn:hover {
+            border-color: #cbd5e0;
+            background: #f7fafc;
+        }
+
+        .checkout-btn {
+            background: #4299e1;
+            color: white;
+            min-width: 180px;
+        }
+
+        .checkout-btn:hover {
+            background: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .review-container {
+                grid-template-columns: 1fr;
+                gap: 32px;
+                padding: 20px;
+            }
+
+            .terms-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 16px 20px;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .header-title {
+                order: -1;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 20px;
+                padding: 24px 20px;
+            }
+
+            .action-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .summary-details {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">SundayGrids</div>
+        <div class="header-title">Review your Reservation</div>
+        <a href="#" class="logout-btn">Logout</a>
+    </header>
+
+    <div class="progress-bar"></div>
+
+    <main class="review-container">
+        <div class="review-content">
+            <section class="terms-section">
+                <h2>Quick glance over terms of service</h2>
+                <div class="terms-grid">
+                    <div class="terms-card">
+                        <div class="terms-icon"></div>
+                        <h3>Account Setup</h3>
+                        <p>Platform requires to store utility and contact information and might ask to complete KYC later.</p>
+                    </div>
+
+                    <div class="terms-card">
+                        <div class="terms-icon"></div>
+                        <h3>Using Credits</h3>
+                        <p>The credits usable for each bill will be limited to the due amount. Extra if any, will be in reserve</p>
+                    </div>
+
+                    <div class="terms-card">
+                        <div class="terms-icon"></div>
+                        <h3>Assurances</h3>
+                        <p>Users will be compensated in credits if the monthly output drops below the secured generation.</p>
+                    </div>
+
+                    <div class="terms-card">
+                        <div class="terms-icon"></div>
+                        <h3>Refund Policy</h3>
+                        <p>Users will be reimbursed if they exit their reservation, as per the project's refund schedule.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <section class="order-summary">
+            <h2>Order Summary</h2>
+            <div class="summary-card">
+                <div class="project-info">
+                    <h3>Project Name</h3>
+                    <h2>Kepler 100</h2>
+
+                    <div class="summary-item">
+                        <span class="label">Capacity reserved</span>
+                        <span class="value" id="capacityReserved">124 W</span>
+                    </div>
+
+                    <div class="summary-details">
+                        <div class="detail-item">
+                            <span class="label">Monthly Credits</span>
+                            <span class="value" id="monthlyCredits">₹90.00</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="label">10 year savings</span>
+                            <span class="value" id="tenYearSavings">₹10,800.00</span>
+                        </div>
+                    </div>
+
+                    <div class="validity">
+                        <h4>Operational Validity</h4>
+                        <span class="date">May 2035</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cost-breakdown">
+                <div class="cost-item">
+                    <span>Reservation Cost</span>
+                    <span id="reservationCost">₹5,251.40</span>
+                </div>
+                <div class="cost-item">
+                    <div>
+                        <span>GST (18%)</span>
+                        <small>GST levied on reservation fee</small>
+                    </div>
+                    <span id="gstAmount">₹945.25</span>
+                </div>
+                <div class="cost-item total">
+                    <span>Final Payable</span>
+                    <span id="finalPayable">₹6,196.65</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <a href="#" class="talk-team">Have more questions? Talk to our team</a>
+        <div class="action-buttons">
+            <button class="back-btn">Back</button>
+            <button class="checkout-btn">Proceed to Checkout</button>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load calculations from localStorage
+            const calculationData = JSON.parse(localStorage.getItem('solarCalculations'));
+            
+            if (calculationData) {
+                // Update all values
+                document.getElementById('capacityReserved').textContent = calculationData.capacityReserved;
+                document.getElementById('monthlyCredits').textContent = calculationData.monthlyCredits;
+                document.getElementById('tenYearSavings').textContent = calculationData.tenYearSavings;
+                document.getElementById('reservationCost').textContent = calculationData.reservationCost;
+                document.getElementById('gstAmount').textContent = '₹' + parseFloat(calculationData.gstAmount).toLocaleString('en-IN');
+                document.getElementById('finalPayable').textContent = '₹' + parseFloat(calculationData.finalPayableAmount).toLocaleString('en-IN');
+            } else {
+                // Redirect back to select-capacity if no data is found
+                alert('Please select your capacity first');
+                window.location.href = 'select-capacity.html';
+            }
+
+            // Add back button functionality
+            document.querySelector('.back-btn').addEventListener('click', function() {
+                window.location.href = 'select-capacity.html';
+            });
+        });
+    </script>
+</body>
+</html>

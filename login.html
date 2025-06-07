@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SundayGrids - Find your Utility</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-white py-3">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <img src="https://www.sundaygrids.com/images/logo.svg" alt="SundayGrids Logo" width="150">
+            </a>
+            <div class="nav-right">
+                <a href="#" class="nav-link">Find your Utility</a>
+                <a href="#" class="btn btn-outline-primary rounded-pill">Logout & Exit <i class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="progress" style="height: 4px;">
+        <div class="progress-bar bg-success" style="width: 33%"></div>
+    </div>
+
+    <main class="container py-5">
+        <div class="row">
+            <div class="col-lg-6">
+                <h1 class="mb-4">Find your power provider</h1>
+                <p class="text-muted mb-4">SundayGrids is linked to more than 70+ electric utilities through Bharat BillPay. Find if your power provider is here</p>
+                
+                <div class="mb-4">
+                    <label class="form-label">State<span class="text-danger">*</span></label>
+                    <select class="form-select form-select-lg mb-3" required>
+                        <option value="" selected disabled>Select your state</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Power Provider<span class="text-danger">*</span></label>
+                    <select class="form-select form-select-lg mb-3" required>
+                        <option value="" selected disabled>Select your power provider</option>
+                    </select>
+                    <div class="text-muted small">
+                        <i class="fas fa-info-circle"></i>
+                        Utilities such as DNHPDCL, JBVNL, MePDCL, Lakshadweep, and Torrent Power, are listed under Others.
+                    </div>
+                    <div class="mt-2">
+                        <span class="text-muted">To view the full list or inform if your utility is missing, </span>
+                        <a href="#" class="text-success text-decoration-none">click here</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="rounded-circle bg-light p-2 me-2">
+                                        <img src="https://www.sundaygrids.com/images/icon-bill.svg" alt="Bill Icon" width="24">
+                                    </div>
+                                </div>
+                                <h5 class="card-title">Manage bills here</h5>
+                                <p class="card-text text-muted">Pay your power bill through SundayGrids to apply credits onto the bill amount</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="rounded-circle bg-light p-2 me-2">
+                                        <img src="https://www.sundaygrids.com/images/icon-check.svg" alt="Check Icon" width="24">
+                                    </div>
+                                </div>
+                                <h5 class="card-title">No extra steps</h5>
+                                <p class="card-text text-muted">If your power provider is listed, you are good to go. No additional permissions from utility required.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="rounded-circle bg-light p-2 me-2">
+                                        <img src="https://www.sundaygrids.com/images/icon-switch.svg" alt="Switch Icon" width="24">
+                                    </div>
+                                </div>
+                                <h5 class="card-title">Multiple utilities</h5>
+                                <p class="card-text text-muted">In case you move houses or change cities, worry not, you could always change your linked utility</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="button" class="btn btn-link text-muted p-0">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-success rounded-pill px-4 py-2" onclick="window.location.href='projects.html'">
+                Continue <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
