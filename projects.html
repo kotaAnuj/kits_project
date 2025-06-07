@@ -5,32 +5,390 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SundayGrids - Select a Project</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand img {
+            height: 32px;
+            width: auto;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-right .nav-link {
+            color: #495057;
+            font-weight: 500;
+            text-decoration: none;
+            margin: 0;
+        }
+
+        .btn-outline-primary {
+            border: 1px solid #6c757d;
+            color: #495057;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #495057;
+            border-color: #495057;
+            color: white;
+        }
+
+        .progress {
+            height: 4px;
+            background-color: #e9ecef;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+            width: 66%;
+        }
+
+        .container {
+            max-width: 1200px;
+        }
+
+        main {
+            padding: 3rem 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+
+        .projects-grid {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-card.selected {
+            border: 2px solid #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+        }
+
+        .project-map {
+            height: 200px;
+            background: linear-gradient(135deg, #d4f4dd 0%, #c3f0ca 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.3;
+        }
+
+        .project-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(34, 77, 51, 0.9);
+            color: white;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .project-details {
+            padding: 1.5rem;
+        }
+
+        .project-details h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .location {
+            color: #6b7280;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        .managed-by {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            background: #f8f9fa;
+            padding: 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat h4 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat p {
+            color: #6b7280;
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .btn-link {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0;
+            border: none;
+            background: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-link:hover {
+            color: #059669;
+        }
+
+        .bottom-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .help-text {
+            background: #f0f9f4;
+            color: #065f46;
+            padding: 0.75rem 1.25rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+
+        .help-text a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-back {
+            background: none;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #f3f4f6;
+            border-color: #9ca3af;
+            color: #4b5563;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            color: white;
+            padding: 0.75rem 2rem;
+            border-radius: 50px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        /* Add bottom padding to main content to account for fixed bar */
+        main {
+            padding: 3rem 0 6rem 0;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-1px);
+        }
+
+        .btn-success:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .fas {
+            font-size: 0.8rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-right {
+                gap: 1rem;
+            }
+            
+            .nav-right .nav-link {
+                display: none;
+            }
+            
+            .bottom-content {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .navigation-buttons {
+                justify-content: center;
+            }
+            
+            .help-text {
+                text-align: center;
+                order: 2;
+            }
+        }
+
+        /* Custom SVG map pattern */
+        .map-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-white py-3">
+    <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="https://www.sundaygrids.com/images/logo.svg" alt="SundayGrids Logo" width="150">
+                <svg width="120" height="32" viewBox="0 0 120 32" fill="none">
+                    <path d="M8 24C12.4183 24 16 20.4183 16 16C16 11.5817 12.4183 8 8 8C3.58172 8 0 11.5817 0 16C0 20.4183 3.58172 24 8 24Z" fill="#10b981"/>
+                    <text x="24" y="20" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#1f2937">SundayGrids</text>
+                </svg>
             </a>
             <div class="nav-right">
                 <span class="nav-link">Select a Project</span>
-                <a href="#" class="btn btn-outline-primary rounded-pill">Logout & Exit <i class="fas fa-arrow-right"></i></a>
+                <a href="#" class="btn btn-outline-primary rounded-pill">
+                    Logout <i class="fas fa-external-link-alt"></i>
+                </a>
             </div>
         </div>
     </nav>
 
-    <div class="progress" style="height: 4px;">
-        <div class="progress-bar bg-success" style="width: 66%"></div>
+    <div class="progress">
+        <div class="progress-bar"></div>
     </div>
 
-    <main class="container py-5">
-        <h1 class="mb-4">Available Projects</h1>
+    <main class="container">
+        <h1>Available Projects</h1>
 
         <div class="projects-grid">
-            <div class="project-card">
+            <div class="project-card" id="project-card">
                 <div class="project-map">
-                    <img src="https://www.sundaygrids.com/images/project-map.svg" alt="Project Map" class="map-bg">
+                    <svg class="map-pattern" viewBox="0 0 400 200">
+                        <defs>
+                            <pattern id="mapPattern" patternUnits="userSpaceOnUse" width="40" height="40">
+                                <rect width="40" height="40" fill="none"/>
+                                <path d="M0 20h40M20 0v40" stroke="rgba(34, 77, 51, 0.1)" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        <rect width="100%" height="100%" fill="url(#mapPattern)"/>
+                        <rect x="50" y="50" width="60" height="40" fill="rgba(34, 77, 51, 0.1)" rx="4"/>
+                        <rect x="150" y="80" width="80" height="50" fill="rgba(34, 77, 51, 0.1)" rx="4"/>
+                        <rect x="280" y="60" width="70" height="35" fill="rgba(34, 77, 51, 0.1)" rx="4"/>
+                        <path d="M100 100 Q150 80 200 100 T300 90" stroke="rgba(34, 77, 51, 0.2)" stroke-width="2" fill="none"/>
+                    </svg>
                     <div class="project-icon">K100</div>
                 </div>
                 <div class="project-details">
@@ -46,27 +404,79 @@
                             <p>Operational Validity</p>
                         </div>
                     </div>
-                    <a href="project-details.html" class="btn btn-link text-success mt-3">View Details <i class="fas fa-arrow-right"></i></a>
+                    <button class="btn btn-link">
+                        View Details <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
 
-        <div class="d-flex mt-5">
-            <div class="help-text me-auto">
-                <p>Have more questions? <a href="#" class="text-success text-decoration-none">Talk to our team</a></p>
-            </div>
-            <div class="navigation-buttons">
-                <button type="button" class="btn btn-link text-muted me-3" onclick="window.history.back()">
-                    <i class="fas fa-arrow-left"></i> Back
-                </button>
-                <button type="button" class="btn btn-success rounded-pill px-4">
-                    Next <i href="select-capacity.html"  class="fas fa-arrow-right"></i>
-                </button>
+        <div class="bottom-section">
+            <div class="bottom-content">
+                <div class="help-text">
+                    Have more questions? <a href="#">Talk to our team</a>
+                </div>
+                <div class="navigation-buttons">
+                    <a href="#" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <a href="select-capacity.html" class="btn btn-success">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectCard = document.getElementById('project-card');
+            let selectedProject = null;
+
+            // Project selection functionality
+            if (projectCard) {
+                projectCard.addEventListener('click', function() {
+                    // Toggle selection
+                    if (projectCard.classList.contains('selected')) {
+                        projectCard.classList.remove('selected');
+                        selectedProject = null;
+                    } else {
+                        projectCard.classList.add('selected');
+                        
+                        // Store selected project data in memory
+                        selectedProject = {
+                            name: "Kepler 100",
+                            location: "Navi Mumbai",
+                            capacity: "99.9 kW",
+                            validity: "May 2035",
+                            manager: "JRP Eco Solutions"
+                        };
+                        
+                        // Add subtle animation
+                        projectCard.style.transform = 'scale(1.02)';
+                        setTimeout(() => {
+                            projectCard.style.transform = '';
+                        }, 200);
+                    }
+                });
+            }
+
+            // Add hover effects
+            projectCard.addEventListener('mouseenter', function() {
+                if (!projectCard.classList.contains('selected')) {
+                    projectCard.style.transform = 'translateY(-2px)';
+                }
+            });
+
+            projectCard.addEventListener('mouseleave', function() {
+                if (!projectCard.classList.contains('selected')) {
+                    projectCard.style.transform = '';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
