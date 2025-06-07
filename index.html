@@ -426,6 +426,210 @@
         </div>
     </section>    <!-- Load JavaScript at the end of body -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <script>
+        // Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Constants for calculations
+    const RATE_PER_UNIT = 6.42; // ₹6.42 per unit as shown in UI
+    const WATTS_PER_UNIT = 8.81; // Conversion factor for solar capacity
+    const ENERGY_FACTOR = 0.1136; // Monthly energy production factor
+    const RESERVATION_RATE = 50; // ₹50 per watt
+    const GST_RATE = 0.18; // 18% GST
+
+    // Get all required elements
+    const elements = {
+        billInput: document.querySelector('.bill-input'),
+        savingsRange: document.getElementById('savings-range'),
+        rangeValue: document.querySelector('.range-value'),
+        monthlySavings: document.getElementById('monthly-savings'),
+        reservedSolar: document.getElementById('reserved-solar'),
+        energyProduced: document.getElementById('energy-produced'),
+        annualSavings: document.getElementById('annual-savings'),
+        tenYearSavings: document.getElementById('ten-year-savings'),
+        reservationFee: document.getElementById('reservation-fee')
+    };
+
+    // Helper function to format currency in Indian format
+    function formatCurrency(amount) {
+        return '₹' + amount.toLocaleString('en-IN', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+        });
+    }
+
+    // Main calculation function
+    function updateCalculations() {
+        // Get input values
+        const billAmount = parseFloat(elements.billInput.value.replace(/[^0-9.]/g, '')) || 0;
+        const savingsPercentage = parseInt(elements.savingsRange.value) || 0;
+
+        // Calculate monthly savings
+        const monthlyAmount = (billAmount * savingsPercentage / 100);
+        
+        // Calculate required units and solar capacity
+        const requiredUnits = monthlyAmount / RATE_PER_UNIT;
+        const solarCapacity = Math.round(requiredUnits * WATTS_PER_UNIT);
+        
+        // Calculate energy production
+        const monthlyEnergy = (solarCapacity * ENERGY_FACTOR).toFixed(2);
+        
+        // Calculate all savings
+        const annualAmount = monthlyAmount * 12;
+        const tenYearAmount = annualAmount * 10;
+        
+        // Calculate reservation fee
+        const baseReservationFee = solarCapacity * RESERVATION_RATE;
+        const gstAmount = baseReservationFee * GST_RATE;
+        const totalReservationFee = baseReservationFee + gstAmount;
+
+        // Update UI elements
+        elements.monthlySavings.textContent = formatCurrency(monthlyAmount);
+        elements.reservedSolar.textContent = solarCapacity.toLocaleString('en-IN') + ' W';
+        elements.energyProduced.textContent = monthlyEnergy + ' kWh';
+        elements.annualSavings.textContent = formatCurrency(annualAmount);
+        elements.tenYearSavings.textContent = formatCurrency(tenYearAmount);
+        elements.reservationFee.textContent = formatCurrency(totalReservationFee);
+        elements.rangeValue.textContent = savingsPercentage + '%';
+    }
+
+    // Add event listeners
+    if (elements.billInput) {
+        elements.billInput.addEventListener('input', function(e) {
+            // Only allow numbers and decimal point
+            this.value = this.value.replace(/[^0-9.]/g, '');
+            updateCalculations();
+        });
+    }
+
+    if (elements.savingsRange) {
+        elements.savingsRange.addEventListener('input', function() {
+            updateCalculations();
+        });
+    }
+
+    // Run initial calculation
+    updateCalculations();
+    
+    // Log to verify script is running
+    console.log('Calculator initialized');
+});
+
+// State and Power Provider Selection Logic
+document.addEventListener('DOMContentLoaded', function() {
+    const stateSelect = document.querySelector('select:first-of-type');
+    const utilitySelect = document.querySelector('select:last-of-type');
+
+    if (stateSelect && utilitySelect) {
+        const states = [
+            'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+            'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+            'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+            'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu',
+            'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+            'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli',
+            'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+        ];
+
+        const utilities = {
+            'Maharashtra': ['MSEDCL', 'BEST', 'Tata Power', 'Adani Electricity'],
+            'Delhi': ['BSES Rajdhani', 'BSES Yamuna', 'Tata Power Delhi'],
+            'Karnataka': ['BESCOM', 'MESCOM', 'HESCOM', 'GESCOM'],
+            'Tamil Nadu': ['TANGEDCO', 'TNEB'],
+            'Gujarat': ['Torrent Power', 'UGVCL', 'DGVCL', 'PGVCL'],
+            'Telangana': ['TSSPDCL', 'TSNPDCL'],
+            'Andhra Pradesh': ['APSPDCL', 'APCPDCL', 'APNPDCL'],
+            'Uttar Pradesh': ['UPPCL', 'Noida Power', 'Torrent Power UP'],
+            // Add more states and their utilities as needed
+        };
+
+        // Populate states
+        states.sort().forEach(state => {
+            const option = document.createElement('option');
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+
+        // Handle state selection
+        stateSelect.addEventListener('change', function() {
+            const selectedState = this.value;
+            utilitySelect.innerHTML = '<option value="" selected disabled>Select your power provider</option>';
+            
+            if (utilities[selectedState]) {
+                utilities[selectedState].forEach(utility => {
+                    const option = document.createElement('option');
+                    option.value = utility;
+                    option.textContent = utility;
+                    utilitySelect.appendChild(option);
+                });
+            } else {
+                // For states without specific utilities, add a default option
+                const option = document.createElement('option');
+                option.value = 'state-discom';
+                option.textContent = selectedState + ' State Electricity Board';
+                utilitySelect.appendChild(option);
+            }
+        });
+
+        // Handle form submission
+        const form = stateSelect.closest('form') || stateSelect.closest('div');
+        const nextButton = document.querySelector('.btn-success');
+        if (nextButton) {
+            nextButton.addEventListener('click', function() {
+                if (stateSelect.value && utilitySelect.value) {
+                    // Store selections
+                    localStorage.setItem('selectedState', stateSelect.value);
+                    localStorage.setItem('selectedUtility', utilitySelect.value);
+                    // Redirect to projects page
+                    window.location.href = 'projects.html';
+                } else {
+                    alert('Please select both state and power provider');
+                }
+            });
+        }
+    }
+});
+
+// Projects Page Navigation
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle projects page navigation
+    if (window.location.pathname.includes('projects.html')) {
+        const projectCards = document.querySelectorAll('.project-card');
+        const nextButton = document.querySelector('.btn-success');
+
+        let selectedProject = null;
+
+        projectCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove selection from other cards
+                projectCards.forEach(c => c.classList.remove('selected'));
+                // Add selection to clicked card
+                this.classList.add('selected');
+                selectedProject = this;
+                
+                // Enable next button if a project is selected
+                if (nextButton) {
+                    nextButton.disabled = false;
+                }
+            });
+        });
+
+        if (nextButton) {
+            nextButton.disabled = true; // Initially disabled
+            nextButton.addEventListener('click', function() {
+                if (selectedProject) {
+                    // Store project selection
+                    const projectName = selectedProject.querySelector('h3').textContent.split('•')[0].trim();
+                    localStorage.setItem('selectedProject', projectName);
+                    // Navigate to select capacity page
+                    window.location.href = 'select-capacity.html';
+                } else {
+                    alert('Please select a project to continue');
+                }
+            });
+        }
+    }
+});
+    </script>
 </body>
 </html>
